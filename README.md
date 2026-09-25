@@ -24,18 +24,28 @@
 
 <img src="docs/curve-editor.png" alt="RANK / MOTION 关键帧与运动曲线编辑器" width="560">
 
-### 使用
+### 下载与快速启动
 
-#### 本地启动
+1. 打开 [GitHub Releases](https://github.com/takinoboru/rank-motion-studio/releases/latest)，下载 `rank-motion-studio-v1.0.0.zip`；可用同页的 `.sha256` 文件校验下载内容。
+2. 完整解压 ZIP，不要直接运行压缩包内的文件。
+3. macOS 双击 `start-macos.command`，Windows 双击 `start-windows.bat`，Linux 运行 `./start-linux.sh`。
+4. 启动器会在 http://127.0.0.1:8765/ 打开编辑器。保持终端窗口运行，按 Control+C 可停止服务。
+
+发布包不需要安装 npm 或第三方依赖。启动器优先使用 Python 3 标准库创建本地服务器；如果没有 Python 3，会直接打开 `index.html`。直接打开仍可编辑，但为了稳定使用 WebCodecs 视频导出，建议通过本地服务器启动。工程保存在当前浏览器中，请定期使用“保存工程”导出 JSON 备份。
+
+### 从源码配置
 
 ```sh
-cd /path/to/rank-motion-studio
-python3 -m http.server 8765 --bind 127.0.0.1 --directory dist
+git clone https://github.com/takinoboru/rank-motion-studio.git
+cd rank-motion-studio
+python3 scripts/serve.py --directory dist --open
 ```
 
-保持终端运行，打开 http://127.0.0.1:8765/ 。使用 Control+C 停止。
+安装了 Node.js 与 npm 的开发者也可以运行 `npm start`。执行 `python3 scripts/build_release.py` 或 `npm run package` 可在 `release/` 中重新生成版本 ZIP 与 SHA-256 校验文件；打包过程只使用 Python 3 标准库。
 
-直接打开 `dist/index.html` 也可编辑。推荐通过 HTTPS 网站或本地 HTTP 服务使用视频导出，因为 WebCodecs 需要安全上下文。网页内的“使用指南”介绍全部操作。
+### 使用
+
+网页内的“使用指南”介绍全部操作。
 
 - 左侧可编辑 1–30 位排名者；姓名、积分、单人样式、字体与全局参数均可修改。
 - 全局排列可调整位置、倾斜、旋转、错列和行距；姓名框可调整圆角、双描边、填充、阴影和点阵。
@@ -91,18 +101,28 @@ The keyframe graph editor provides precise control over keyframe timing, values,
 
 <img src="docs/curve-editor.png" alt="RANK / MOTION keyframe and motion-curve editor" width="560">
 
-### Usage
+### Download and quick start
 
-#### Run locally
+1. Open [GitHub Releases](https://github.com/takinoboru/rank-motion-studio/releases/latest) and download `rank-motion-studio-v1.0.0.zip`. The accompanying `.sha256` file can be used to verify the download.
+2. Extract the entire ZIP instead of running files inside the archive.
+3. Double-click `start-macos.command` on macOS, double-click `start-windows.bat` on Windows, or run `./start-linux.sh` on Linux.
+4. The launcher opens the editor at http://127.0.0.1:8765/. Keep the terminal window open and press Control+C to stop the server.
+
+The release package requires no npm installation or third-party dependencies. Its launcher uses the Python 3 standard library when available and otherwise opens `index.html` directly. Direct opening supports editing, but the local server is recommended for reliable WebCodecs video export. Projects are stored in the current browser, so export JSON backups regularly with “Save Project.”
+
+### Configure from source
 
 ```sh
-cd /path/to/rank-motion-studio
-python3 -m http.server 8765 --bind 127.0.0.1 --directory dist
+git clone https://github.com/takinoboru/rank-motion-studio.git
+cd rank-motion-studio
+python3 scripts/serve.py --directory dist --open
 ```
 
-Keep the terminal running and open http://127.0.0.1:8765/ . Press Control+C to stop the server.
+Developers with Node.js and npm may use `npm start`. Run `python3 scripts/build_release.py` or `npm run package` to recreate the release ZIP and SHA-256 checksum in `release/`. Packaging uses only the Python 3 standard library.
 
-You can also open `dist/index.html` directly. For video export, an HTTPS site or local HTTP server is recommended because WebCodecs requires a secure context. The in-app guide explains all controls.
+### Usage
+
+The in-app guide explains all controls.
 
 - Edit 1–30 rankers, including their names, points, individual styles, fonts, and global settings.
 - Adjust the overall position, slant, rotation, staggering, and row spacing. Nameplates support editable corner radius, double outlines, fill, shadow, and halftone texture.
@@ -158,18 +178,28 @@ RANK / MOTION は、p5.js で描画する漫画風ランキングアニメーシ
 
 <img src="docs/curve-editor.png" alt="RANK / MOTION のキーフレームとモーショングラフエディター" width="560">
 
-### 使い方
+### ダウンロードとクイックスタート
 
-#### ローカルで起動
+1. [GitHub Releases](https://github.com/takinoboru/rank-motion-studio/releases/latest) を開き、`rank-motion-studio-v1.0.0.zip` をダウンロードします。同じページの `.sha256` ファイルでダウンロード内容を検証できます。
+2. ZIP 内のファイルを直接実行せず、ZIP 全体を展開してください。
+3. macOS では `start-macos.command`、Windows では `start-windows.bat` をダブルクリックします。Linux では `./start-linux.sh` を実行します。
+4. ランチャーが http://127.0.0.1:8765/ でエディターを開きます。ターミナルを起動したままにし、終了するには Control+C を押します。
+
+配布パッケージでは npm や外部依存パッケージのインストールは不要です。ランチャーは利用可能な場合に Python 3 標準ライブラリでローカルサーバーを起動し、Python 3 がない場合は `index.html` を直接開きます。直接開いた場合も編集できますが、WebCodecs による動画書き出しを安定させるにはローカルサーバーの利用を推奨します。プロジェクトは現在のブラウザーに保存されるため、「プロジェクトを保存」から JSON のバックアップを定期的に書き出してください。
+
+### ソースからのセットアップ
 
 ```sh
-cd /path/to/rank-motion-studio
-python3 -m http.server 8765 --bind 127.0.0.1 --directory dist
+git clone https://github.com/takinoboru/rank-motion-studio.git
+cd rank-motion-studio
+python3 scripts/serve.py --directory dist --open
 ```
 
-ターミナルを起動したまま http://127.0.0.1:8765/ を開いてください。終了するには Control+C を押します。
+Node.js と npm がある場合は `npm start` も使用できます。`python3 scripts/build_release.py` または `npm run package` を実行すると、`release/` に配布用 ZIP と SHA-256 チェックサムを再生成できます。パッケージ作成には Python 3 標準ライブラリだけを使用します。
 
-`dist/index.html` を直接開いて編集することもできます。WebCodecs には安全なコンテキストが必要なため、動画の書き出しには HTTPS サイトまたはローカル HTTP サーバーの利用を推奨します。すべての操作はアプリ内の使用ガイドで確認できます。
+### 使い方
+
+すべての操作はアプリ内の使用ガイドで確認できます。
 
 - 1～30 位のランカーを編集できます。名前、ポイント、個別スタイル、フォント、全体設定を変更できます。
 - 全体の位置、傾斜、回転、段違い、行間を調整できます。ネームプレートでは角丸、二重線、塗り、影、網点を変更できます。
