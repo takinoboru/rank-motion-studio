@@ -10,6 +10,10 @@
 
 本动画项目为 [Niconico 视频项目 lv351456470](https://live.nicovideo.jp/watch/lv351456470?rf=nvpc&rp=tag) 制作，旨在探索 AI 参与视频制作的边界。项目以真实还原原作漫画《someone hertz》中出现的排名 UI 为目标，并将静态画面转化为可编辑、可设置关键帧、可录制与导出的动态动画系统。
 
+![《someone hertz》中排名 UI 的参考效果](docs/someone-hertz-ranking-ui-reference.png)
+
+*原作漫画中排名 UI 的参考效果。*
+
 ### 使用
 
 #### 本地启动
@@ -63,6 +67,10 @@ RANK / MOTION is a p5.js-based editor for animated manga-style rankings. Its vis
 
 This animation project was created for the [Niconico video project lv351456470](https://live.nicovideo.jp/watch/lv351456470?rf=nvpc&rp=tag) to explore the boundaries of AI participation in video production. It aims to faithfully recreate the ranking UI from the original manga *someone hertz* and turn the static design into an editable animation system with keyframes, recording, and export tools.
 
+![Reference appearance of the ranking UI in someone hertz](docs/someone-hertz-ranking-ui-reference.png)
+
+*Reference appearance of the ranking UI in the original manga.*
+
 ### Usage
 
 #### Run locally
@@ -115,6 +123,10 @@ RANK / MOTION は、p5.js で描画する漫画風ランキングアニメーシ
 ### プロジェクトの背景
 
 本アニメーションプロジェクトは、[ニコニコ生放送の動画企画 lv351456470](https://live.nicovideo.jp/watch/lv351456470?rf=nvpc&rp=tag) のために制作されました。AI が映像制作に参加する可能性とその境界を探ることを目的としています。原作漫画『someone hertz』に登場するランキング UI を忠実に再現し、静止画のデザインを、編集・キーフレーム設定・録画・書き出しが可能なアニメーションシステムへ発展させることを目指しています。
+
+![『someone hertz』に登場するランキング UI の参考イメージ](docs/someone-hertz-ranking-ui-reference.png)
+
+*原作漫画に登場するランキング UI の参考イメージ。*
 
 ### 使い方
 
