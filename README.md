@@ -14,6 +14,16 @@
 
 *原作漫画中排名 UI 的参考效果。*
 
+### 界面展示
+
+完整工作区将排名者列表、合成预览、属性检查器和关键帧时间线整合在同一界面中。
+
+![RANK / MOTION 整体编辑界面](docs/rank-motion-interface.png)
+
+关键帧曲线编辑器可精确修改关键帧时间、数值、插值方式和自定义贝塞尔控制点。
+
+<img src="docs/curve-editor.png" alt="RANK / MOTION 关键帧与运动曲线编辑器" width="560">
+
 ### 使用
 
 #### 本地启动
@@ -71,6 +81,16 @@ This animation project was created for the [Niconico video project lv351456470](
 
 *Reference appearance of the ranking UI in the original manga.*
 
+### Interface preview
+
+The complete workspace brings the ranker list, composition preview, property inspector, and keyframe timeline into one interface.
+
+![Complete RANK / MOTION editing workspace](docs/rank-motion-interface.png)
+
+The keyframe graph editor provides precise control over keyframe timing, values, interpolation modes, and custom Bézier control points.
+
+<img src="docs/curve-editor.png" alt="RANK / MOTION keyframe and motion-curve editor" width="560">
+
 ### Usage
 
 #### Run locally
@@ -127,6 +147,16 @@ RANK / MOTION は、p5.js で描画する漫画風ランキングアニメーシ
 ![『someone hertz』に登場するランキング UI の参考イメージ](docs/someone-hertz-ranking-ui-reference.png)
 
 *原作漫画に登場するランキング UI の参考イメージ。*
+
+### 画面紹介
+
+ランカー一覧、コンポジションプレビュー、プロパティインスペクター、キーフレームタイムラインを 1 つのワークスペースにまとめています。
+
+![RANK / MOTION の編集画面全体](docs/rank-motion-interface.png)
+
+キーフレーム曲線エディターでは、キーフレームの時間、値、補間方法、カスタムベジェ制御点を正確に調整できます。
+
+<img src="docs/curve-editor.png" alt="RANK / MOTION のキーフレームとモーショングラフエディター" width="560">
 
 ### 使い方
 
