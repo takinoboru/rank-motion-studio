@@ -21,8 +21,8 @@ function interpolate(a,b,t){
 }
 const DEFAULTS={
   x:960,y:590,scale:1,rotation:-4,skew:-9,rowRotation:0,stepX:31,gap:124,width:980,height:102,radius:51,stroke:4,inset:10,innerStroke:2,shadow:13,shadowX:0,
-  fill:'#fafaf7',strokeColor:'#171918',textColor:'#171918',nameColor:'#171918',ptColor:'#171918',badgeColor:'#171918',badgeText:'#ffffff',bg:'#edeee8',accent:'#d3f66b',font:'Noto Sans JP',nameSize:28,ptSize:59,rankSize:62,
-  startRank:7,title:'リスナー甲子園',subtitle:'RADIO NAME RANKING / 2026',titleSize:43,showTitle:true,showGrid:true,texture:0,opacity:1,
+  fill:'#fafaf7',strokeColor:'#171918',textColor:'#171918',nameColor:'#171918',ptColor:'#171918',badgeColor:'#171918',badgeText:'#ffffff',bg:'#edeee8',accent:'#d3f66b',font:'Noto Sans JP',nameSize:28,ptSize:59,ptOffsetY:0,rankSize:62,
+  startRank:7,title:'リスナー甲子園',subtitle:'RADIO NAME RANKING / 2026',titleSize:43,showTitle:true,transparentBg:false,showGrid:true,texture:0,opacity:1,
   namePrefix:'ラジオネーム',unit:'pt',rankSuffix:'位',swapDuration:.72,swapArc:42,swapEase:'ease',entrance:'slide',entranceDuration:.75,stagger:.12,roll:true
 };
 const ROW_DEFAULTS={name:'新しいラジオネーム',points:0,x:0,y:0,rotation:0,scale:1,opacity:1,delay:0,reveal:1,highlight:false,visible:true};
@@ -94,26 +94,32 @@ function fitText(ctx,s,maxWidth,size,font,weight){
   ctx.font=`${weight} ${size}px "${String(font).replaceAll('"','')}","Noto Sans JP",sans-serif`;
   return Math.min(size,size*maxWidth/Math.max(1,ctx.measureText(String(s)).width));
 }
-function rollingNumber(ctx,n,x,y,size,color,font,roll){
+function rollingNumber(ctx,n,x,y,size,color,font,roll,slotTop,slotBottom){
   n=clamp(n,0,9999999);const nearest=Math.round(n);
   const digits=Math.max(2,String(roll?Math.floor(n):nearest).length);const dw=size*.63;
-  ctx.save();ctx.beginPath();ctx.rect(x-digits*dw-5,y-size*.58,digits*dw+10,size*1.2);ctx.clip();
+  ctx.save();
+  ctx.font=`900 ${size}px "${String(font).replaceAll('"','')}","Noto Sans JP","Hiragino Kaku Gothic ProN",sans-serif`;
+  ctx.textBaseline='alphabetic';ctx.textAlign='center';ctx.fillStyle=color;
+  const metrics=ctx.measureText('0123456789');
+  const baseline=y+(metrics.actualBoundingBoxAscent-metrics.actualBoundingBoxDescent)/2;
+  const advance=slotBottom-slotTop+2;
+  ctx.beginPath();ctx.rect(x-digits*dw-5,slotTop,digits*dw+10,slotBottom-slotTop);ctx.clip();
   for(let i=0;i<digits;i++){
     const quotient=n/10**i,whole=Math.floor(quotient),frac=quotient-whole;
     // Higher wheels engage only during the last unit before a carry.
     const slide=roll?(i===0?frac:clamp(n%10**i-(10**i-1),0,1)):0;
     const digit=roll?whole%10:Math.floor(nearest/10**i)%10;
     const dx=x-i*dw-dw*.5;
-    text(ctx,digit,dx,y-slide*size*1.15,size,color,font,900,'center');
-    if(slide>0)text(ctx,(digit+1)%10,dx,y+(1-slide)*size*1.15,size,color,font,900,'center');
+    ctx.fillText(String(digit),dx,baseline-slide*advance);
+    if(slide>0)ctx.fillText(String((digit+1)%10),dx,baseline+(1-slide)*advance);
   }
   ctx.restore();
 }
 function render(ctx,project,t,w,h,events,options={}){
-  const g=resolved(project,'scene',t);ctx.save();ctx.clearRect(0,0,w,h);
-  if(!options.transparent){ctx.fillStyle=g.bg;ctx.fillRect(0,0,w,h);}
+  const g=resolved(project,'scene',t),transparent=options.transparent??g.transparentBg;ctx.save();ctx.clearRect(0,0,w,h);
+  if(!transparent){ctx.fillStyle=g.bg;ctx.fillRect(0,0,w,h);}
   const unit=Math.min(w/1920,h/1080);ctx.translate((w-1920*unit)/2,(h-1080*unit)/2);ctx.scale(unit,unit);
-  if(g.showGrid&&!options.transparent){ctx.fillStyle=g.textColor;ctx.globalAlpha=.07;for(let y=22;y<1080;y+=26)for(let x=22;x<1920;x+=26){ctx.fillRect(x,y,1.5,1.5);}ctx.globalAlpha=1;}
+  if(g.showGrid&&!transparent){ctx.fillStyle=g.textColor;ctx.globalAlpha=.07;for(let y=22;y<1080;y+=26)for(let x=22;x<1920;x+=26){ctx.fillRect(x,y,1.5,1.5);}ctx.globalAlpha=1;}
   if(g.showTitle){
     text(ctx,g.subtitle,138,104,17,g.textColor,g.font,500);text(ctx,g.title,138,165,g.titleSize,g.textColor,g.font,900);
     ctx.strokeStyle=g.textColor;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(138,214);ctx.lineTo(1782,214);ctx.stroke();
@@ -145,10 +151,27 @@ function render(ctx,project,t,w,h,events,options={}){
     const label=g.namePrefix+' '+r.name;const ns=fitText(ctx,label,nameWidth,r.nameSize,r.font,700);
     ctx.save();ctx.beginPath();ctx.rect(nameLeft,top+inset,nameWidth*clamp(r.reveal*(r.entrance==='type'?enter:1),0,1),height*.44);ctx.clip();text(ctx,label,(nameLeft+nameRight)/2,-height*.235,ns,r.nameColor,r.font,700,'center');ctx.restore();
     ctx.lineWidth=1.8;ctx.strokeStyle=r.textColor;ctx.beginPath();ctx.moveTo(nameLeft,-height*.03);ctx.lineTo(nameRight,-height*.03);ctx.stroke();
-    const score=point(project,row.id,t),digits=Math.max(2,String(r.roll?Math.floor(score):Math.round(score)).length);const ps=Math.max(1,Math.min(r.ptSize,height*.58,Math.max(10,nameWidth-60)/(digits*.63)));
-    const cx=(nameLeft+nameRight)/2,end=cx+digits*ps*.63/2-10;
-    rollingNumber(ctx,score,end,height*.26,ps,r.ptColor,r.font,r.roll);
-    text(ctx,g.unit,end+8,height*.35,Math.min(25,height*.23),r.ptColor,r.font,700);
+    const score=point(project,row.id,t),digits=Math.max(2,String(r.roll?Math.floor(score):Math.round(score)).length);
+    // Fit the actual digit ink between the separator and inner bottom border.
+    const scoreTop=-height*.03+4,scoreBottom=Math.max(scoreTop+1,height/2-inset-r.innerStroke/2-3);
+    const offset=Number(r.ptOffsetY)||0,scoreY=(scoreTop+scoreBottom)/2+offset;
+    let ps=Math.max(1,Math.min(r.ptSize,height*.58,Math.max(10,nameWidth-60)/(digits*.63)));
+    const digitMetrics=size=>{ctx.font=`900 ${size}px "${String(r.font).replaceAll('"','')}","Noto Sans JP","Hiragino Kaku Gothic ProN",sans-serif`;ctx.textBaseline='alphabetic';return ctx.measureText('0123456789');};
+    let metrics=digitMetrics(ps);
+    ps*=Math.min(1,Math.max(1,scoreBottom-scoreTop-4)/Math.max(1,metrics.actualBoundingBoxAscent+metrics.actualBoundingBoxDescent));
+    let unitSize=Math.min(25,height*.23,ps*.48);
+    ctx.font=`700 ${unitSize}px "${String(r.font).replaceAll('"','')}","Noto Sans JP","Hiragino Kaku Gothic ProN",sans-serif`;
+    let unitWidth=ctx.measureText(String(g.unit)).width,gap=g.unit?8:0;
+    const fit=Math.min(1,nameWidth/Math.max(1,digits*ps*.63+gap+unitWidth));
+    ps*=fit;unitSize*=fit;unitWidth*=fit;gap*=fit;metrics=digitMetrics(ps);
+    const totalWidth=digits*ps*.63+gap+unitWidth;
+    const end=(nameLeft+nameRight-totalWidth)/2+digits*ps*.63;
+    rollingNumber(ctx,score,end,scoreY,ps,r.ptColor,r.font,r.roll,scoreTop+offset,scoreBottom+offset);
+    ctx.font=`700 ${unitSize}px "${String(r.font).replaceAll('"','')}","Noto Sans JP","Hiragino Kaku Gothic ProN",sans-serif`;
+    ctx.fillStyle=r.ptColor;ctx.textAlign='left';ctx.textBaseline='alphabetic';
+    const unitMetrics=ctx.measureText(String(g.unit));
+    const unitBaseline=Math.min(scoreY+(metrics.actualBoundingBoxAscent-metrics.actualBoundingBoxDescent)/2,scoreBottom+offset-unitMetrics.actualBoundingBoxDescent);
+    ctx.fillText(String(g.unit),end+gap,unitBaseline);
     ctx.restore();
   }
   ctx.restore();
